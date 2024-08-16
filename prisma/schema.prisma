@@ -3,18 +3,101 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Boulder {
-  id         Int    @id @default(autoincrement())
-  key        String @unique
-  name       String
-  difficulty Int
-  sector     String
-  city       String
-  ascensions Int
+  id             String   @id @default(uuid())
+  name           String
+  city           String
+  sector         String
+  difficulty     Int
+  ascents        Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relationships
+  Activities     Activity[]
 
   @@map("Boulders")
+}
+
+model Via {
+  id             String   @id @default(uuid())
+  name           String
+  location       String
+  difficulty     String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ascents        Int      @default(0)
+  sector         String
+
+  // Relationships
+  Activities     Activity[]
+
+  @@map("Vias")
+}
+
+model User {
+  id             String   @id @default(uuid())
+  name           String
+  photoUrl       String?
+  email          String   @unique
+  password       String
+  permissionLevel PermissionLevel
+
+  // Relationships
+  Activities     Activity[]
+
+  @@map("Users")
+}
+
+model Activity {
+  id             String   @id @default(uuid())
+  type           ActivityType
+  date           DateTime @default(now())
+  score          Int
+  boulderId      String?
+  viaId          String?
+  userId         String
+  boulder        Boulder? @relation(fields: [boulderId], references: [id])
+  via            Via?     @relation(fields: [viaId], references: [id])
+  user           User     @relation(fields: [userId], references: [id])
+
+  @@map("Activitys")
+}
+
+model Ranking {
+  id             String   @id @default(uuid())
+  type           RankingType
+  period         RankingPeriod
+  ranking        Json
+}
+
+// Enum for ranking type
+enum RankingType {
+  climber
+  boulder
+  via
+}
+
+// Enum for activity type
+enum ActivityType {
+  boulder
+  via
+}
+
+// Enum for permission level
+enum PermissionLevel {
+  basic
+  contributor
+  admin
+}
+
+// Enum for ranking period
+enum RankingPeriod {
+  week
+  month
+  year
 }
