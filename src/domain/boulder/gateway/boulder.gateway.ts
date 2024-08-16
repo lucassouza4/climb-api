@@ -2,12 +2,9 @@ import { Boulder } from "../entity/boulder.entity";
 
 export interface BoulderGateway {
   save(boulder: Boulder): Promise<Boulder | Error>;
-  get(id: string): Promise<Boulder | Error>;
-  getAll(
-    name?: string,
-    city?: string,
-    sector?: string,
-  ): Promise<Boulder[] | Error>;
+  get(id?: string, name?: string): Promise<Boulder | Error>;
+  getByName(name: string): Promise<Boulder | Error>;
+  getAll(city: string, sector?: string): Promise<Boulder[] | Error>;
   update(
     name?: string,
     difficulty?: number,

@@ -32,7 +32,7 @@ export class boulderRepositoryPrisma implements BoulderGateway {
         city: boulder.city,
         ascents: boulder.ascents,
       });
-    } catch (error) {
+    } catch {
       return new Error("Não foi possível salvar no banco");
     }
   }
@@ -52,17 +52,57 @@ export class boulderRepositoryPrisma implements BoulderGateway {
           ascents: boulder.ascents,
         });
       } else return new Error("Busca sem retorno");
-    } catch (error) {
+    } catch {
+      return new Error("Não foi possivel buscar");
+    }
+  }
+
+  public async getByName(name: string): Promise<Boulder | Error> {
+    try {
+      const boulder = await this.prismaClient.boulder.findFirst({
+        where: { name: name },
+      });
+      if (boulder) {
+        return Boulder.with({
+          id: boulder.id,
+          name: boulder.name,
+          difficulty: boulder.difficulty,
+          sector: boulder.sector,
+          city: boulder.city,
+          ascents: boulder.ascents,
+        });
+      } else return new Error("Busca sem retorno");
+    } catch {
       return new Error("Não foi possivel buscar");
     }
   }
 
   public async getAll(
-    name?: string,
-    city?: string,
+    city: string,
     sector?: string,
   ): Promise<Boulder[] | Error> {
-    return new Error(`${name}, ${city}, ${sector}`);
+    try {
+      const boulders = await this.prismaClient.boulder.findMany({
+        where: { city: city, sector: sector },
+      });
+      if (boulders) {
+        const bouldersList = boulders.map((boulder) => {
+          return Boulder.with({
+            id: boulder.id,
+            name: boulder.name,
+            difficulty: boulder.difficulty,
+            sector: boulder.sector,
+            city: boulder.city,
+            ascents: boulder.ascents,
+          });
+        });
+        return bouldersList;
+      } else {
+        return new Error("Busca sem retorno");
+      }
+    } catch {
+      return new Error("Não foi possivel buscar");
+    }
   }
 
   public async update(

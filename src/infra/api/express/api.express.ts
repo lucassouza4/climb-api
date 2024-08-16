@@ -3,7 +3,6 @@ import * as express from "express";
 import { Express } from "express";
 
 import { Route } from "./routes/route";
-import bodyParser = require("body-parser");
 
 interface RouteInfo {
   route: {
@@ -17,7 +16,7 @@ export class ApiExpress implements Api {
 
   private constructor(routes: Route[]) {
     this.app = express();
-    this.app.use(bodyParser.json());
+    this.app.use(express.json());
     this.addRoutes(routes);
   }
 

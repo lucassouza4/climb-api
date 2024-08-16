@@ -22,21 +22,26 @@ export class CreateBoulderUsecase
     return new CreateBoulderUsecase(boulderGateway);
   }
 
-  public async execute({
-    name,
-    difficulty,
-    sector,
-    city,
-  }: CreateBoulderInputDto): Promise<CreateBoulderOutputDto | Error> {
-    const boulder = Boulder.create(name, difficulty, sector, city); // REVISAR A CRIAÇÃO
+  public async execute(
+    input: CreateBoulderInputDto,
+  ): Promise<CreateBoulderOutputDto | Error> {
+    const boulder = Boulder.create(
+      input.name,
+      input.difficulty,
+      input.sector,
+      input.city,
+    );
     try {
-      // primeiro deve buscar se existe no banco
-      const savedBoulder = await this.boulderGateway.save(boulder);
-      if (savedBoulder instanceof Error) {
-        return new Error(savedBoulder.message);
+      const boulderFinded = await this.boulderGateway.getByName(input.name);
+      if (boulderFinded instanceof Error) {
+        const savedBoulder = await this.boulderGateway.save(boulder);
+        if (savedBoulder instanceof Error) {
+          return new Error(savedBoulder.message);
+        }
+        return this.presentOutput(savedBoulder);
       }
-      return this.presentOutput(savedBoulder);
-    } catch (error) {
+      return new Error("boulder já cadastrado");
+    } catch {
       return new Error("erro ao criar boulder");
     }
   }

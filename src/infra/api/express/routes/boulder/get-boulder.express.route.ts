@@ -1,14 +1,9 @@
-import { GetBoulderUsecase } from "@/usecases/boulder/get-boulder/get-boulder.usecase";
+import {
+  GetBoulderOutputDto,
+  GetBoulderUsecase,
+} from "@/usecases/boulder/get-boulder/get-boulder.usecase";
 import { httpMethod, Route } from "../route";
 import { Request, Response } from "express";
-
-export type GetBoulderOutputDto = {
-  name: string;
-  difficulty: number;
-  sector: string;
-  city: string;
-  ascents: number;
-};
 
 export class GetBoulderRoute implements Route {
   private constructor(
