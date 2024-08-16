@@ -16,12 +16,13 @@ COPY . .
 # Copie o arquivo .env para o diretório de trabalho
 COPY .env .env
 
-# Compile o TypeScript para JavaScript
-RUN yarn build
+# Copie o script de inicialização
+COPY entrypoint.sh ./
+RUN chmod +x ./entrypoint.sh
 
 # Exponha a porta que a aplicação vai rodar
 EXPOSE 3000
 EXPOSE 9229
 
-# Defina o comando para iniciar a aplicação
-CMD ["yarn", "start:dev"]
+# Defina o script de entrada
+ENTRYPOINT ["./entrypoint.sh"]

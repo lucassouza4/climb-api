@@ -5,5 +5,5 @@ CREATE TABLE "Boulders" (
     "difficulty" INTEGER NOT NULL,
     "sector" TEXT NOT NULL,
     "city" TEXT NOT NULL,
-    "ascensions" INTEGER NOT NULL
+    "ascents" INTEGER NOT NULL
 );

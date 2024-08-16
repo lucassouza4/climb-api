@@ -1,12 +1,12 @@
-import { randomUUID } from "crypto";
-
 export type BoulderProps = {
-  key: string;
   name: string;
   difficulty: number;
   sector: string;
   city: string;
-  ascensions: number;
+  ascents: number;
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 export class Boulder {
   private constructor(private props: BoulderProps) {
@@ -18,15 +18,13 @@ export class Boulder {
     difficulty: number,
     sector: string,
     city: string,
-    key?: string,
   ) {
     return new Boulder({
-      key: key || randomUUID().toString(),
       name,
       difficulty,
       sector,
       city,
-      ascensions: 0,
+      ascents: 0,
     });
   }
 
@@ -36,10 +34,10 @@ export class Boulder {
       this.props.sector == null ||
       this.props.city == null
     ) {
-      throw new Error("name, sector e city precisam ser fornecidos");
+      return new Error("name, sector e city precisam ser fornecidos");
     }
     if (this.props.difficulty < 0) {
-      throw new Error("A difficulty do bulder deve ser maior ou igual a V0");
+      return new Error("A difficulty do bulder deve ser maior ou igual a V0");
     }
   }
 
@@ -47,8 +45,8 @@ export class Boulder {
     return new Boulder(props);
   }
 
-  public get key() {
-    return this.props.key;
+  public get id() {
+    return this.props.id;
   }
 
   public get name() {
@@ -67,15 +65,15 @@ export class Boulder {
     return this.props.city;
   }
 
-  public get ascensions() {
-    return this.props.ascensions;
+  public get ascents() {
+    return this.props.ascents;
   }
 
-  public increaseAscensions() {
-    this.props.ascensions += 1;
+  public increaseascents() {
+    this.props.ascents += 1;
   }
 
-  public decreaseAscensions() {
-    this.props.ascensions -= 1;
+  public decreaseascents() {
+    this.props.ascents -= 1;
   }
 }

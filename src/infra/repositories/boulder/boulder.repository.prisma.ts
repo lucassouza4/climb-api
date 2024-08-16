@@ -11,40 +11,49 @@ export class boulderRepositoryPrisma implements BoulderGateway {
     return new boulderRepositoryPrisma(prismaClient);
   }
 
-  public async save(boulder: Boulder): Promise<void> {
+  public async save(boulder: Boulder): Promise<Boulder | Error> {
     const data = {
-      key: boulder.key,
       name: boulder.name,
       difficulty: boulder.difficulty,
       sector: boulder.sector,
       city: boulder.city,
-      ascensions: boulder.ascensions,
+      ascents: boulder.ascents,
     };
 
     try {
-      await this.prismaClient.boulder.create({
+      const boulder = await this.prismaClient.boulder.create({
         data,
       });
+      return Boulder.with({
+        id: boulder.id,
+        name: boulder.name,
+        difficulty: boulder.difficulty,
+        sector: boulder.sector,
+        city: boulder.city,
+        ascents: boulder.ascents,
+      });
     } catch (error) {
-      throw new Error("Não foi possível salvar no banco");
+      return new Error("Não foi possível salvar no banco");
     }
   }
 
-  public async get(key: string): Promise<Boulder> {
+  public async get(id: string): Promise<Boulder | Error> {
     try {
       const boulder = await this.prismaClient.boulder.findUnique({
-        where: { key: key },
+        where: { id: id },
       });
-      return Boulder.with({
-        name: boulder?.name || "",
-        difficulty: boulder?.difficulty || 0,
-        sector: boulder?.sector || "",
-        city: boulder?.city || "",
-        key: boulder?.key || "",
-        ascensions: boulder?.ascensions || 0,
-      });
+      if (boulder) {
+        return Boulder.with({
+          id: boulder.id,
+          name: boulder.name,
+          difficulty: boulder.difficulty,
+          sector: boulder.sector,
+          city: boulder.city,
+          ascents: boulder.ascents,
+        });
+      } else return new Error("Busca sem retorno");
     } catch (error) {
-      throw new Error("Não foi possível buscar no banco");
+      return new Error("Não foi possivel buscar");
     }
   }
 
@@ -52,8 +61,8 @@ export class boulderRepositoryPrisma implements BoulderGateway {
     name?: string,
     city?: string,
     sector?: string,
-  ): Promise<Boulder[]> {
-    throw new Error(`${name}, ${city}, ${sector}`);
+  ): Promise<Boulder[] | Error> {
+    return new Error(`${name}, ${city}, ${sector}`);
   }
 
   public async update(
@@ -61,10 +70,10 @@ export class boulderRepositoryPrisma implements BoulderGateway {
     difficulty?: number,
     sector?: string,
     city?: string,
-  ): Promise<void> {
-    throw new Error(`${name}, ${difficulty}, ${sector}, ${city}`);
+  ): Promise<void | Error> {
+    return new Error(`${name}, ${difficulty}, ${sector}, ${city}`);
   }
-  public async delete(id: string): Promise<void> {
-    throw new Error(`${id}`);
+  public async delete(id: string): Promise<void | Error> {
+    return new Error(`${id}`);
   }
 }

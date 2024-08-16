@@ -27,24 +27,24 @@ export class CreateBoulderUsecase
     difficulty,
     sector,
     city,
-  }: CreateBoulderInputDto): Promise<CreateBoulderOutputDto> {
+  }: CreateBoulderInputDto): Promise<CreateBoulderOutputDto | Error> {
     const boulder = Boulder.create(name, difficulty, sector, city); // REVISAR A CRIAÇÃO
     try {
       // primeiro deve buscar se existe no banco
-      await this.boulderGateway.save(boulder);
+      const savedBoulder = await this.boulderGateway.save(boulder);
+      if (savedBoulder instanceof Error) {
+        return new Error(savedBoulder.message);
+      }
+      return this.presentOutput(savedBoulder);
     } catch (error) {
-      throw new Error("erro ao criar boulder");
+      return new Error("erro ao criar boulder");
     }
-
-    const output = this.presentOutput(boulder);
-
-    return output;
   }
 
-  private presentOutput(boulder: Boulder | undefined): CreateBoulderOutputDto {
+  private presentOutput(boulder: Boulder): CreateBoulderOutputDto {
     // MELHORAR OS PRESENTERS (camada)
     const output: CreateBoulderOutputDto = {
-      id: boulder?.key || "",
+      id: boulder.id || "",
     };
 
     return output;

@@ -15,9 +15,9 @@ CREATE TABLE "new_Boulders" (
     "difficulty" INTEGER NOT NULL,
     "sector" TEXT NOT NULL,
     "city" TEXT NOT NULL,
-    "ascensions" INTEGER NOT NULL
+    "ascents" INTEGER NOT NULL
 );
-INSERT INTO "new_Boulders" ("ascensions", "city", "difficulty", "id", "key", "name", "sector") SELECT "ascensions", "city", "difficulty", "id", "key", "name", "sector" FROM "Boulders";
+INSERT INTO "new_Boulders" ("ascents", "city", "difficulty", "id", "key", "name", "sector") SELECT "ascents", "city", "difficulty", "id", "key", "name", "sector" FROM "Boulders";
 DROP TABLE "Boulders";
 ALTER TABLE "new_Boulders" RENAME TO "Boulders";
 PRAGMA foreign_keys=ON;

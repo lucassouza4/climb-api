@@ -3,12 +3,11 @@ import { httpMethod, Route } from "../route";
 import { Request, Response } from "express";
 
 export type GetBoulderOutputDto = {
-  id: string;
   name: string;
   difficulty: number;
   sector: string;
   city: string;
-  ascensions: number;
+  ascents: number;
 };
 
 export class GetBoulderRoute implements Route {
@@ -25,14 +24,12 @@ export class GetBoulderRoute implements Route {
   public getHandler(): (request: Request, response: Response) => Promise<void> {
     return async (request: Request, response: Response) => {
       const input = request.body;
-
-      try {
-        const output = await this.getBoulderService.execute(input);
+      const output = await this.getBoulderService.execute(input);
+      if (output instanceof Error) {
+        response.status(400).json(output.message).send();
+      } else {
         const responseBody = this.present(output);
-
         response.status(200).json(responseBody).send();
-      } catch (error) {
-        response.status(404).send();
       }
     };
   }
@@ -47,12 +44,11 @@ export class GetBoulderRoute implements Route {
 
   private present(input: GetBoulderOutputDto) {
     const response = {
-      id: input.id,
       name: input.name,
       difficulty: input.difficulty,
       sector: input.sector,
       city: input.city,
-      ascensions: input.ascensions,
+      ascents: input.ascents,
     };
 
     return response;

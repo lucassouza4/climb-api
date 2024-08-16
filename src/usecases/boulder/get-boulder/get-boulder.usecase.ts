@@ -6,12 +6,11 @@ export type GetBoulderInputDto = {
   id: string;
 };
 export type GetBoulderOutputDto = {
-  id: string;
   name: string;
   difficulty: number;
   sector: string;
   city: string;
-  ascensions: number;
+  ascents: number;
 };
 
 export class GetBoulderUsecase
@@ -25,25 +24,21 @@ export class GetBoulderUsecase
 
   public async execute(
     input: GetBoulderInputDto,
-  ): Promise<GetBoulderOutputDto> {
-    let boulder;
-    try {
-      boulder = await this.boulderGateway.get(input.id);
-    } catch (error) {
-      throw new Error("erro ao buscar boulder");
+  ): Promise<GetBoulderOutputDto | Error> {
+    const boulder = await this.boulderGateway.get(input.id);
+    if (boulder instanceof Error) {
+      return new Error(boulder.message);
     }
-    const output = this.presentOutput(boulder);
-    return output;
+    return this.presentOutput(boulder);
   }
 
-  private presentOutput(boulder: Boulder | undefined): GetBoulderOutputDto {
+  private presentOutput(boulder: Boulder): GetBoulderOutputDto {
     const output: GetBoulderOutputDto = {
-      id: boulder?.key || "",
-      name: boulder?.name || "",
-      difficulty: boulder?.difficulty || 0,
-      sector: boulder?.sector || "",
-      city: boulder?.city || "",
-      ascensions: boulder?.ascensions || 0,
+      name: boulder.name,
+      difficulty: boulder.difficulty,
+      sector: boulder.sector,
+      city: boulder.city,
+      ascents: boulder.ascents,
     };
     return output;
   }

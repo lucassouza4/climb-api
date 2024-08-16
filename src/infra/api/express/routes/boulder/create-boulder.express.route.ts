@@ -36,15 +36,12 @@ export class CreateBoulderRoute implements Route {
         city,
       };
 
-      try {
-        const output: CreateBoulderOutputDto =
-          await this.createBoulderService.execute(input);
-
+      const output = await this.createBoulderService.execute(input);
+      if (output instanceof Error) {
+        response.status(400).json(output.message).send();
+      } else {
         const responseBody = this.present(output);
-
         response.status(201).json(responseBody).send();
-      } catch (error) {
-        response.status(400).send();
       }
     };
   }
