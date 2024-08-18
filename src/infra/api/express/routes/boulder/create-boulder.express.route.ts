@@ -19,7 +19,7 @@ export class CreateBoulderRoute implements Route {
 
   public static create(createBoulderService: CreateBoulderUsecase) {
     return new CreateBoulderRoute(
-      "/boulders",
+      `${process.env.API_BASE_PATH}/boulders`,
       httpMethod.POST,
       createBoulderService,
     );

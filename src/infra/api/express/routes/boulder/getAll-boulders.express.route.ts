@@ -14,7 +14,7 @@ export class GetAllBouldersRoute implements Route {
 
   public static create(getAllBouldersService: GetAllBouldersUsecase) {
     return new GetAllBouldersRoute(
-      "/boulders/all",
+      `${process.env.API_BASE_PATH}/boulders`,
       httpMethod.GET,
       getAllBouldersService,
     );

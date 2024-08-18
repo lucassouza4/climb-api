@@ -37,27 +37,7 @@ export class boulderRepositoryPrisma implements BoulderGateway {
     }
   }
 
-  public async get(id: string): Promise<Boulder | Error> {
-    try {
-      const boulder = await this.prismaClient.boulder.findUnique({
-        where: { id: id },
-      });
-      if (boulder) {
-        return Boulder.with({
-          id: boulder.id,
-          name: boulder.name,
-          difficulty: boulder.difficulty,
-          sector: boulder.sector,
-          city: boulder.city,
-          ascents: boulder.ascents,
-        });
-      } else return new Error("Busca sem retorno");
-    } catch {
-      return new Error("Não foi possivel buscar");
-    }
-  }
-
-  public async getByName(name: string): Promise<Boulder | Error> {
+  public async get(name: string): Promise<Boulder | Error> {
     try {
       const boulder = await this.prismaClient.boulder.findFirst({
         where: { name: name },

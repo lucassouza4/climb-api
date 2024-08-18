@@ -42,19 +42,15 @@ O sistema é uma plataforma de escalada onde usuários podem gerenciar suas ativ
 
 ### 6. Visualização de Boulders
 
-- [ ] **Listas de Boulders**: A visualização de boulders será feita através de listas resultantes dos filtros aplicados.
+- [] **Listas de Boulders**: A visualização de boulders será feita através de listas resultantes dos filtros aplicados.
   - [ ] **Filtros Disponíveis**:
-    - [ ] **Localidade**: Filtra boulders por local específico (cidade, região, etc.).
+    - [x] **Localidade**: Filtra boulders por local específico (cidade, setor, etc.).
     - [ ] **Dificuldade**: Filtra boulders por nível de dificuldade.
-- [ ] As listas devem ser ordenáveis por critérios como popularidade, data de criação, e avaliações dos usuários.
-
-### 7. Comentários e Avaliações
-
-- [ ] Comentários e avaliações em boulders, influenciando sua visibilidade e ajudando outros usuários a decidir quais tentar.
+- [ ] As listas devem ser ordenáveis por critérios como popularidade, data de criação, e número de ascensões.
 
 ### 8. Notificações
 
-- [ ] Alertas sobre novas atividades, como boulders próximos, novos comentários, mudanças no ranking, e atualizações de boulders favoritos.
+- [ ] Alertas sobre novas atividades, novos boulders, mudanças no ranking
 
 ### 9. Integração com Redes Sociais
 

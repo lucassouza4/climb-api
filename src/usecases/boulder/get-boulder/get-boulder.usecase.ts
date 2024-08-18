@@ -3,7 +3,7 @@ import { BoulderGateway } from "@/domain/boulder/gateway/boulder.gateway";
 import { Usecase } from "@/usecases/usecase";
 
 export type GetBoulderInputDto = {
-  id: string;
+  name: string;
 };
 export type GetBoulderOutputDto = {
   name: string;
@@ -25,7 +25,7 @@ export class GetBoulderUsecase
   public async execute(
     input: GetBoulderInputDto,
   ): Promise<GetBoulderOutputDto | Error> {
-    const boulder = await this.boulderGateway.get(input.id);
+    const boulder = await this.boulderGateway.get(input.name);
     if (boulder instanceof Error) {
       return new Error(boulder.message);
     }

@@ -1,0 +1,436 @@
+openapi: 3.0.0
+info:
+  title: Climb API
+  description: API for managing climbing data, including boulders, vias, users, activities, and rankings.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local server
+
+paths:
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Returns the user details.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found.
+
+  /users:
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUser"
+      responses:
+        "201":
+          description: User created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request.
+
+  /boulders:
+    get:
+      summary: Get all boulders
+      responses:
+        "200":
+          description: A list of boulders.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Boulder"
+
+    post:
+      summary: Create a new boulder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBoulder"
+      responses:
+        "201":
+          description: Boulder created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Boulder"
+        "400":
+          description: Bad request.
+
+  /boulders/{id}:
+    put:
+      summary: Update a boulder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the boulder.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBoulder"
+      responses:
+        "200":
+          description: Boulder updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Boulder"
+        "404":
+          description: Boulder not found.
+
+  /boulders/search:
+    get:
+      summary: Search boulders by name
+      parameters:
+        - name: name
+          in: query
+          required: true
+          description: The name of the boulder to search for.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of boulders that match the search criteria.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Boulder"
+        "404":
+          description: No boulders found with the given name.
+
+  /vias:
+    get:
+      summary: Get all vias
+      responses:
+        "200":
+          description: A list of vias.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Via"
+
+    post:
+      summary: Create a new via
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateVia"
+      responses:
+        "201":
+          description: Via created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Via"
+        "400":
+          description: Bad request.
+
+  /vias/search:
+    get:
+      summary: Search vias by name
+      parameters:
+        - name: name
+          in: query
+          required: true
+          description: The name of the via to search for.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of vias that match the search criteria.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Via"
+        "404":
+          description: No vias found with the given name.
+
+  /users/{userId}/activities:
+    get:
+      summary: Get activities by user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of activities.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Activity"
+        "404":
+          description: User not found.
+
+  /activities:
+    post:
+      summary: Create a new activity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateActivity"
+      responses:
+        "201":
+          description: Activity created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Activity"
+        "400":
+          description: Bad request.
+
+  /rankings:
+    get:
+      summary: Get rankings by type and period
+      parameters:
+        - name: type
+          in: query
+          required: true
+          description: The type of ranking (climber, boulder, via).
+          schema:
+            type: string
+            enum: [climber, boulder, via]
+        - name: period
+          in: query
+          required: true
+          description: The period of the ranking (week, month, year).
+          schema:
+            type: string
+            enum: [week, month, year]
+      responses:
+        "200":
+          description: Ranking data.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ranking"
+        "400":
+          description: Bad request.
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        photoUrl:
+          type: string
+          nullable: true
+        email:
+          type: string
+        password:
+          type: string
+        permissionLevel:
+          type: string
+          enum: [basic, contributor, admin]
+
+    CreateUser:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - permissionLevel
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        photoUrl:
+          type: string
+          nullable: true
+        permissionLevel:
+          type: string
+          enum: [basic, contributor, admin]
+
+    Boulder:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        city:
+          type: string
+        sector:
+          type: string
+        difficulty:
+          type: integer
+        ascents:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateBoulder:
+      type: object
+      required:
+        - name
+        - city
+        - sector
+        - difficulty
+      properties:
+        name:
+          type: string
+        city:
+          type: string
+        sector:
+          type: string
+        difficulty:
+          type: integer
+
+    Via:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        location:
+          type: string
+        difficulty:
+          type: string
+        sector:
+          type: string
+        ascents:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateVia:
+      type: object
+      required:
+        - name
+        - location
+        - difficulty
+        - sector
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+        difficulty:
+          type: string
+        sector:
+          type: string
+
+    Activity:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [boulder, via]
+        date:
+          type: string
+          format: date-time
+        score:
+          type: integer
+        boulderId:
+          type: string
+          nullable: true
+        viaId:
+          type: string
+          nullable: true
+        userId:
+          type: string
+        boulder:
+          $ref: "#/components/schemas/Boulder"
+        via:
+          $ref: "#/components/schemas/Via"
+        user:
+          $ref: "#/components/schemas/User"
+
+    CreateActivity:
+      type: object
+      required:
+        - type
+        - score
+        - userId
+      properties:
+        type:
+          type: string
+          enum: [boulder, via]
+        date:
+          type: string
+          format: date-time
+        score:
+          type: integer
+        boulderId:
+          type: string
+          nullable: true
+        viaId:
+          type: string
+          nullable: true
+        userId:
+          type: string
+
+    Ranking:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [climber, boulder, via]
+        period:
+          type: string
+          enum: [week, month, year]
+        ranking:
+          type: object
+          additionalProperties:
+            type: string

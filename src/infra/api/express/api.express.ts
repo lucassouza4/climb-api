@@ -1,6 +1,8 @@
 import { Api } from "../api";
 import * as express from "express";
 import { Express } from "express";
+import * as swaggerUi from "swagger-ui-express";
+import * as yaml from "yamljs";
 
 import { Route } from "./routes/route";
 
@@ -18,6 +20,14 @@ export class ApiExpress implements Api {
     this.app = express();
     this.app.use(express.json());
     this.addRoutes(routes);
+    if (process.env.NODE_ENV === "development") {
+      const swaggerDocument = yaml.load("./swagger.yaml");
+      this.app.use(
+        "/api-docs",
+        swaggerUi.serve,
+        swaggerUi.setup(swaggerDocument),
+      );
+    }
   }
 
   public static create(routes: Route[]) {
@@ -41,6 +51,10 @@ export class ApiExpress implements Api {
   public start(port: number): void {
     this.app.listen(port, () => {
       console.log(`Server running on port ${port}`);
+      if (process.env.NODE_ENV == "development")
+        console.log(
+          `Swagger docs available at http://localhost:${port}/api-docs`,
+        );
       this.listRoutes();
     });
   }

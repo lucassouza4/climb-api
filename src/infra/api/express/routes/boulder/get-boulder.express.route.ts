@@ -13,7 +13,11 @@ export class GetBoulderRoute implements Route {
   ) {}
 
   public static create(getBoulderService: GetBoulderUsecase) {
-    return new GetBoulderRoute("/boulders", httpMethod.GET, getBoulderService);
+    return new GetBoulderRoute(
+      `${process.env.API_BASE_PATH}/boulders/search`,
+      httpMethod.GET,
+      getBoulderService,
+    );
   }
 
   public getHandler(): (request: Request, response: Response) => Promise<void> {

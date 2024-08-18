@@ -32,7 +32,7 @@ export class CreateBoulderUsecase
       input.city,
     );
     try {
-      const boulderFinded = await this.boulderGateway.getByName(input.name);
+      const boulderFinded = await this.boulderGateway.get(input.name);
       if (boulderFinded instanceof Error) {
         const savedBoulder = await this.boulderGateway.save(boulder);
         if (savedBoulder instanceof Error) {
