@@ -11,6 +11,10 @@ export type CreateBoulderInputDto = {
 
 export type CreateBoulderOutputDto = {
   id: string;
+  name: string;
+  difficulty: number;
+  sector: string;
+  city: string;
 };
 
 export class CreateBoulderUsecase
@@ -50,6 +54,10 @@ export class CreateBoulderUsecase
     // MELHORAR OS PRESENTERS (camada)
     const output: CreateBoulderOutputDto = {
       id: boulder.id || "",
+      name: boulder.name,
+      difficulty: boulder.difficulty,
+      city: boulder.city,
+      sector: boulder.sector,
     };
 
     return output;

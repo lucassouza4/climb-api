@@ -55,7 +55,13 @@ export class CreateBoulderRoute implements Route {
   }
 
   private present(input: CreateBoulderOutputDto): CreateBoulderOutputDto {
-    const response = { id: input.id };
+    const response = {
+      id: input.id,
+      name: input.name,
+      difficulty: input.difficulty,
+      city: input.city,
+      sector: input.sector,
+    };
     return response;
   }
 }
