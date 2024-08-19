@@ -62,4 +62,22 @@ describe("get all boulders", () => {
       input.sector,
     );
   });
+
+  it("Should not get all boulders", async () => {
+    const output = new Error("Não foi encontrado nenhum boulder");
+
+    mockBoulderGateway.getAll.mockResolvedValueOnce(output);
+
+    const result = await getAllBouldersUsecase.execute(input);
+
+    if (result instanceof Error) {
+      expect(result.message).toBe(output.message);
+    } else {
+      throw new Error("Expected result to be an instance of Error");
+    }
+    expect(mockBoulderGateway.getAll).toHaveBeenCalledWith(
+      input.city,
+      input.sector,
+    );
+  });
 });
