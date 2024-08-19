@@ -15,6 +15,7 @@ export type CreateBoulderOutputDto = {
   difficulty: number;
   sector: string;
   city: string;
+  ascents: number;
 };
 
 export class CreateBoulderUsecase
@@ -35,19 +36,15 @@ export class CreateBoulderUsecase
       input.sector,
       input.city,
     );
-    try {
-      const boulderFinded = await this.boulderGateway.get(input.name);
-      if (boulderFinded instanceof Error) {
-        const savedBoulder = await this.boulderGateway.save(boulder);
-        if (savedBoulder instanceof Error) {
-          return new Error(savedBoulder.message);
-        }
-        return this.presentOutput(savedBoulder);
+    const boulderFinded = await this.boulderGateway.get(input.name);
+    if (boulderFinded instanceof Error) {
+      const savedBoulder = await this.boulderGateway.save(boulder);
+      if (savedBoulder instanceof Error) {
+        return new Error(savedBoulder.message);
       }
-      return new Error("boulder já cadastrado");
-    } catch {
-      return new Error("erro ao criar boulder");
+      return this.presentOutput(savedBoulder);
     }
+    return new Error("boulder já cadastrado");
   }
 
   private presentOutput(boulder: Boulder): CreateBoulderOutputDto {
@@ -58,6 +55,7 @@ export class CreateBoulderUsecase
       difficulty: boulder.difficulty,
       city: boulder.city,
       sector: boulder.sector,
+      ascents: boulder.ascents,
     };
 
     return output;
