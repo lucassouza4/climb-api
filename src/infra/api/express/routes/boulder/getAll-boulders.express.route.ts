@@ -45,6 +45,7 @@ export class GetAllBouldersRoute implements Route {
     const response: GetAllBouldersoutputDto = {
       boulders: output.boulders.map((boulder) => {
         return {
+          id: boulder.id,
           name: boulder.name,
           difficulty: boulder.difficulty,
           sector: boulder.sector,

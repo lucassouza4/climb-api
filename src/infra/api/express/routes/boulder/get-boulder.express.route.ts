@@ -43,6 +43,7 @@ export class GetBoulderRoute implements Route {
 
   private present(input: GetBoulderOutputDto) {
     const response = {
+      id: input.id,
       name: input.name,
       difficulty: input.difficulty,
       sector: input.sector,
