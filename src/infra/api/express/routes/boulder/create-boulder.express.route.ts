@@ -61,6 +61,7 @@ export class CreateBoulderRoute implements Route {
       difficulty: input.difficulty,
       city: input.city,
       sector: input.sector,
+      ascents: input.ascents,
     };
     return response;
   }
