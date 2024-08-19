@@ -6,6 +6,7 @@ export type GetBoulderInputDto = {
   name: string;
 };
 export type GetBoulderOutputDto = {
+  id: string;
   name: string;
   difficulty: number;
   sector: string;
@@ -34,6 +35,7 @@ export class GetBoulderUsecase
 
   private presentOutput(boulder: Boulder): GetBoulderOutputDto {
     const output: GetBoulderOutputDto = {
+      id: boulder.id || "",
       name: boulder.name,
       difficulty: boulder.difficulty,
       sector: boulder.sector,

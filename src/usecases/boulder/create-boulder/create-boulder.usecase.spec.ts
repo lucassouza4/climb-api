@@ -4,29 +4,7 @@ import {
   CreateBoulderOutputDto,
   CreateBoulderUsecase,
 } from "./create-boulder.usecase";
-import { BoulderGateway } from "@/domain/boulder/gateway/boulder.gateway";
-
-interface MockBoulderGateway extends BoulderGateway {
-  save: jest.Mock<Promise<Boulder | Error>, [boulder: Boulder]>;
-  get: jest.Mock<Promise<Boulder | Error>, [name: string]>;
-  getAll: jest.Mock<
-    Promise<Boulder[] | Error>,
-    [city: string, sector?: string]
-  >;
-  update: jest.Mock<
-    Promise<void | Error>,
-    [name?: string, difficulty?: number, sector?: string, city?: string]
-  >;
-  delete: jest.Mock<Promise<void | Error>, [ids: string]>;
-}
-
-const mockBoulderGateway: MockBoulderGateway = {
-  save: jest.fn(),
-  get: jest.fn(),
-  getAll: jest.fn(),
-  update: jest.fn(),
-  delete: jest.fn(),
-};
+import { mockBoulderGateway } from "@/package/prisma/prisma-mock";
 
 describe("create boulder", () => {
   let createBoulderUsecase: CreateBoulderUsecase;
@@ -98,7 +76,7 @@ describe("create boulder", () => {
     const result = await createBoulderUsecase.execute(input);
 
     if (result instanceof Error) {
-      expect(result.message).toBe("erro ao criar boulder");
+      expect(result.message).toBe(error.message);
     } else {
       throw new Error("Expected result to be an instance of Error");
     }
